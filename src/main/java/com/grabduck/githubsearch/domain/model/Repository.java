@@ -24,7 +24,7 @@ public record Repository(
     private static final double RECENCY_WEIGHT = 0.1;
     
     // Scaling factor for recency score to make it comparable to stars and forks
-    private static final double RECENCY_SCALE_FACTOR = 100.0;
+    private static final double RECENCY_SCALE_FACTOR = 10.0;
     
     /**
      * Calculates a popularity score based on stars, forks and update recency. Each component has it's own predefined weight.
