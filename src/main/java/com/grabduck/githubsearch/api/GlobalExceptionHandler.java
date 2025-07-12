@@ -26,7 +26,6 @@ public class GlobalExceptionHandler {
         
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Validation error: " + ex.getMessage());
         problemDetail.setTitle("Validation Error");
-        problemDetail.setProperty("path", request.getRequestURI());
         
         return problemDetail;
     }
@@ -41,7 +40,6 @@ public class GlobalExceptionHandler {
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Request parameter type mismatch");
         problemDetail.setTitle("Type Conversion Error");
-        problemDetail.setProperty("path", request.getRequestURI());
 
         return problemDetail;
     }
@@ -57,7 +55,6 @@ public class GlobalExceptionHandler {
         
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.SERVICE_UNAVAILABLE, ex.getMessage());
         problemDetail.setTitle("Repository Search Failed");
-        problemDetail.setProperty("path", request.getRequestURI());
         
         return problemDetail;
     }
@@ -71,7 +68,6 @@ public class GlobalExceptionHandler {
         
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
         problemDetail.setTitle("Internal Server Error");
-        problemDetail.setProperty("path", request.getRequestURI());
         
         return problemDetail;
     }
