@@ -38,7 +38,7 @@ public class RepositoryController {
         @RequestParam(required = false) 
         String language,
 
-        @RequestParam(required = false) 
+        @RequestParam(required = false, defaultValue = "2008-04-01") 
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) 
         LocalDate createdSince,
 
