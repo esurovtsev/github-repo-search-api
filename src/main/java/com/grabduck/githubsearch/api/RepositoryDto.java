@@ -13,5 +13,5 @@ public record RepositoryDto(
     String language,
     Integer stargazersCount,
     Integer forksCount,
-    Double popularityScore
+    Integer popularityScore
 ) {}

@@ -31,12 +31,12 @@ public record Repository(
      * 
      * @return A final score of the repository
      */
-    public double popularityScore() {
+    public Integer popularityScore() {
         double starsScore = stargazersCount != null ? stargazersCount : 0;
         double forksScore = forksCount != null ? forksCount : 0;
         double recencyScore = getRecencyScore();
-        
-        return (starsScore * STARS_WEIGHT) + (forksScore * FORKS_WEIGHT) + (recencyScore * RECENCY_WEIGHT);
+        double score = (starsScore * STARS_WEIGHT) + (forksScore * FORKS_WEIGHT) + (recencyScore * RECENCY_WEIGHT);
+        return (int) Math.round(score);
     }
     
     /**

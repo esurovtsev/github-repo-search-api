@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GlobalExceptionHandler {
     
     /**
-     * Handles validation errors from @Validated controller class with parameter constraints.
+     * Handles validation errors from @Validated parameters from controller.
      */
     @ExceptionHandler(ConstraintViolationException.class)
     public ProblemDetail handleConstraintViolation(ConstraintViolationException ex, HttpServletRequest request) {
@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Request parameter type mismatch");
         problemDetail.setTitle("Type Conversion Error");
         problemDetail.setProperty("path", request.getRequestURI());
-        
+
         return problemDetail;
     }
     
