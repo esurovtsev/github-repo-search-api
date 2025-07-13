@@ -9,8 +9,6 @@ import java.time.temporal.ChronoUnit;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RepositoryTest {
-
-    private static final double DELTA = 0.001;
     private Instant now;
     
     @BeforeEach
