@@ -1,0 +1,43 @@
+# Basic request with all the default parameters
+GET http://localhost:8080/api/repositories
+Accept: application/json
+
+###
+
+# Complete request with all parameters
+GET http://localhost:8080/api/repositories?createdSince=2020-01-01&language=java&sort=stars&direction=desc&page=1&size=10
+Accept: application/json
+
+###
+
+# Filter by language
+GET http://localhost:8080/api/repositories?createdSince=2019-01-01&language=python
+Accept: application/json
+
+###
+
+# Sorting
+GET http://localhost:8080/api/repositories?createdSince=2022-01-01&sort=updated&direction=desc
+Accept: application/json
+
+###
+
+########### Error handling
+
+# Invalid date format
+GET http://localhost:8080/api/repositories?createdSince=01.01.2020
+Accept: application/json
+
+###
+
+# Invalid sort field
+GET http://localhost:8080/api/repositories?createdSince=2020-01-01&sort=popularity
+Accept: application/json
+
+###
+
+# Invalid page number and page size
+GET http://localhost:8080/api/repositories?createdSince=2020-01-01&page=-1&size=1000
+Accept: application/json
+
+###
