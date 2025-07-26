@@ -1,0 +1,19 @@
+{
+  "properties": [
+    {
+      "name": "github.api.baseUrl",
+      "type": "java.lang.String",
+      "description": "Base URL of the GitHub API."
+    },
+    {
+      "name": "github.api.token",
+      "type": "java.lang.String",
+      "description": "Personal access token for GitHub API authentication."
+    },
+    {
+      "name": "github.api.version",
+      "type": "java.lang.String",
+      "description": "Version of the GitHub API to use."
+    }
+  ]
+}

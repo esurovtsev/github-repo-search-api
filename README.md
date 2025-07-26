@@ -1,20 +1,20 @@
 # GitHub Repository Search API
 
-A backend service for searching GitHub repositories with custom popularity scoring based on stars, forks, and update recency — built for the Redcare Pharmacy Backend Coding Challenge.
+A backend service for searching GitHub repositories with custom popularity scoring based on stars, forks, and update recency — a reference implementation showcasing modern backend architecture principles.
 
 ## Project Overview
 
-The goal of this project is to build a backend app that scores GitHub repositories. The app works as a wrapper around GitHub’s public search API, getting repositories and adding a custom popularity score based on stars, forks, and how recently the repo was updated. Also, there is a single service in the domain layer that acts as an orchestration unit. In line with DDD ideas, our domain object is "rich"—it knows by itself how to calculate its own score, so the core logic stays in the domain layer.
+This project demonstrates building a backend app that scores GitHub repositories. The app works as a wrapper around GitHub's public search API, getting repositories and adding a custom popularity score based on stars, forks, and how recently the repo was updated. There is a single service in the domain layer that acts as an orchestration unit. In line with DDD ideas, our domain object is "rich"—it knows by itself how to calculate its own score, so the core logic stays in the domain layer.
 
-Because I had limited time and wanted to keep things simple, I focused on the most important parts for this challenge. I decided not to add things like caching or retry logic, which would be needed in a real-world app. Instead, the main goal was to show a good architecture, where different parts of the app are separated and can work on their own. I skipped some small improvements that would be required for a production system, but our structure makes it easy to add them later if needed, without big changes.
+The project focuses on demonstrating good architecture principles. While I chose not to implement certain production features like caching or retry logic, the architecture is designed so these can be easily added later without significant refactoring.
 
-The main idea was to show clear separation between layers in the app. I used a lightweight hexagonal (ports and adapters) architecture, with the core logic in the `domain` layer and a simple `api` layer on top. For this small task, I know a classic layered approach would also work, but here I wanted to show that I understand how to build more complex systems if needed. I also tried to keep the package structure as flat as possible, to avoid too much complexity for such a small project.
+The main architectural approach is a lightweight hexagonal (ports and adapters) architecture, with the core logic in the `domain` layer and a simple `api` layer on top. This demonstrates how to build systems with clear separation of concerns. I also kept the package structure as flat as possible to maintain simplicity and readability.
 
-A quick note about test coverage: I did not write tests for every small component (for example, I skipped writing tests for simple mappers between domain and DTOs). Instead, I focused on the most important things: I have unit tests for the repository score calculation, unit tests to check that low-level exceptions are correctly turned into high-level exceptions, and a full-cycle integration test that checks the main logic. For the integration test, I also made a shortcut — I mocked the `RepositoryProvider` with predefined responses instead of using a web server to simulate GitHub (such as OkHttp's `MockWebServer`). This way, I covered the critical parts, but didn’t spend time on less important tests, given the time limits.
+Regarding test coverage: I implemented strategic testing rather than exhaustive coverage. The codebase includes unit tests for the repository score calculation, unit tests to verify proper exception handling, and a full-cycle integration test that validates the main logic flow. For the integration test, I mocked the `RepositoryProvider` with predefined responses instead of using a web server to simulate GitHub (such as OkHttp's `MockWebServer`). This approach focuses on testing the most critical components while maintaining development efficiency.
 
 ## Design Decisions and Limitations
 
-While working on this project, I ran into a few places where there was no perfect answer and each option had its own pros and cons. In this section, I just list all the trade-offs or decisions I made as I went along. These are not always connected to each other, but just show my thinking process and how I tried to solve problems as they came up.
+While working on this project, I encountered several design decisions where there was no perfect answer and each option had its own pros and cons. This section outlines the key trade-offs and decisions made during development, illustrating my thought process and problem-solving approach.
 
 ### Why I Don’t Support Sorting or Filtering by Popularity Score
 
@@ -35,7 +35,7 @@ A couple of details: stars and forks are just the raw numbers from GitHub—ther
 
 ### Domain Model Design
 
-The GitHub repository object is huge and full of nested properties that describe every detail of a repo. For this challenge, I picked only the fields that really matter for my use case. My thinking is simple: the domain model should only include the data I actually need. If I ever need more fields, I can always add them later. I also don't like the idea of just passing the whole massive GitHub object straight to the client—most of that data would never be used, but it would make responses bigger, slow things down, and waste resources. Smaller models are easier to read, maintain, and support. This way, there is a clear boundary between my own domain and the external GitHub API.
+The GitHub repository object is huge and full of nested properties that describe every detail of a repo. In this implementation, I picked only the fields that really matter for my use case. My thinking is simple: the domain model should only include the data I actually need. If I ever need more fields, I can always add them later. I also don't like the idea of just passing the whole massive GitHub object straight to the client—most of that data would never be used, but it would make responses bigger, slow things down, and waste resources. Smaller models are easier to read, maintain, and support. This way, there is a clear boundary between my own domain and the external GitHub API.
 
 ### Default Parameter Behavior
 
@@ -69,7 +69,7 @@ While testing, I ran into a problem with GitHub's API: the `q` parameter (the se
 
 ## API Endpoint & Parameters
 
-I decided not to spend time on generating a full Swagger/OpenAPI spec for this challenge, but here are the basics you need to know to use the API:
+Here are the basics you need to know to use the API:
 
 **Main endpoint:**
 ```

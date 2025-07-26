@@ -2,9 +2,9 @@ package com.grabduck.githubsearch.domain.exceptions;
 
 /**
  * Base exception for all repository search related errors.
- * We decided to keep it simple for this technical challenge.
- * In a production there should be a a more detailed hierarchy 
- * of exceptions created.
+ * Kept simple by design for better maintainability.
+ * In a production environment, a more detailed hierarchy 
+ * of exceptions would be implemented.
  */
 public class RepositorySearchException extends RuntimeException {
     

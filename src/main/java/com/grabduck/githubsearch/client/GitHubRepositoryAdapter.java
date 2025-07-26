@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 /**
  * Adapter implementation of RepositoryProvider that uses GitHub API.
  * 
- * as a note for challenge: we separated here 2 concerns: high-level Adapter and low-level GitHubClient.
+ * Architecture note: we separated here 2 concerns: high-level Adapter and low-level GitHubClient.
  * The idea for a future would be that Adapter takes care of high-level concerns like, caching, maybe retrying 
  * (maybe - because we use Spring WebClient in GitHubClient and that has built-in retrying out of the box already), 
  * hiding low-level technical details such as githib specific exceptions from the domain layer etc, while 
