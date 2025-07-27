@@ -1,16 +1,24 @@
 package com.grabduck.githubsearch.client;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDateTime;
 
 public record GitHubRepositoryDto(
     Long id,
     String name,
-    String full_name,
-    String html_url,
+    @JsonProperty("full_name") 
+    String fullName,
+    @JsonProperty("html_url") 
+    String htmlUrl,
     String description,
     String language,
-    int stargazers_count,
-    int forks_count,
-    LocalDateTime created_at,
-    LocalDateTime updated_at
+    @JsonProperty("stargazers_count") 
+    int stargazersCount,
+    @JsonProperty("forks_count") 
+    int forksCount,
+    @JsonProperty("created_at") 
+    LocalDateTime createdAt,
+    @JsonProperty("updated_at") 
+    LocalDateTime updatedAt
 ) {}

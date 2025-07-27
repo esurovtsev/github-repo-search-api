@@ -6,7 +6,7 @@ A backend service for searching GitHub repositories with custom popularity scori
 
 This project demonstrates building a backend app that scores GitHub repositories. The app works as a wrapper around GitHub's public search API, getting repositories and adding a custom popularity score based on stars, forks, and how recently the repo was updated. There is a single service in the domain layer that acts as an orchestration unit. In line with DDD ideas, our domain object is "rich"—it knows by itself how to calculate its own score, so the core logic stays in the domain layer.
 
-The project focuses on demonstrating good architecture principles. While I chose not to implement certain production features like caching or retry logic, the architecture is designed so these can be easily added later without significant refactoring.
+The project focuses on demonstrating good architecture principles with practical implementations of production-grade features. The architecture includes caching and retry mechanisms, while maintaining clean separation of concerns:
 
 The main architectural approach is a lightweight hexagonal (ports and adapters) architecture, with the core logic in the `domain` layer and a simple `api` layer on top. This demonstrates how to build systems with clear separation of concerns. I also kept the package structure as flat as possible to maintain simplicity and readability.
 
@@ -39,8 +39,36 @@ The GitHub repository object is huge and full of nested properties that describe
 
 ### Default Parameter Behavior
 
-While testing, I ran into a problem with GitHub's API: the `q` parameter (the search query) is required, but in my API, both filter parameters are optional. If the client doesn't set either filter, I would end up making a call to GitHub without a `q` at all - which just fails. My first idea was to force at least one filter to always be set, but that felt wrong and would have meant rewriting a lot of logic. Instead, I decided to quietly set a default value for one of the filters so `q` is always present. The cleanest option was to default the `created` date filter to something neutral and far in the past. I picked April 1, 2008 (the day GitHub was founded), since every real repo will have been created after that date. This way, the API works out of the box, and users don’t have to worry about this GitHub issue at all.
+While testing, I ran into a problem with GitHub's API: the `q` parameter (the search query) is required, but in my API, both filter parameters are optional. If the client doesn't set either filter, I would end up making a call to GitHub without a `q` at all - which just fails. My first idea was to force at least one filter to always be set, but that felt wrong and would have meant rewriting a lot of logic. Instead, I decided to quietly set a default value for one of the filters so `q` is always present. The cleanest option was to default the `created` date filter to something neutral and far in the past. I picked April 1, 2008 (the day GitHub was founded), since every real repo will have been created after that date. This way, the API works out of the box, and users don't have to worry about this GitHub issue at all.
 
+### Validation Strategy
+
+The project implements a deliberate multi-layered validation approach:
+
+1. **HTTP/Controller Layer** - Uses Spring validation annotations (`@Min`, `@Max`, `@Pattern`) to validate input format and ranges before request processing begins
+
+2. **Domain Model Layer** - The `SearchRequest` record constructor performs business rule validation, ensuring core domain constraints (like page ranges and null checks) are enforced regardless of how the object is created
+
+This dual-validation strategy ensures both the API contract is respected and that domain objects always maintain a valid state. I chose not to add a third validation layer in the service or query-building code as it would be redundant and violate DRY principles. By validating at the entry point (controller) and encapsulating business rules in the domain model itself, the service layer can remain focused on orchestration and business logic rather than repetitive validation.
+
+### Retry and Caching Strategy
+
+**Retry Mechanism:**
+The application implements a resilient retry strategy for GitHub API calls using Project Reactor's retry capabilities. The WebClient is configured to:
+- Perform up to 3 retry attempts with exponential backoff (starting at 1 second)
+- Only retry on server errors (5xx) and connection issues, not on client errors (4xx)
+- Provide informative error messages when retries are exhausted
+
+This approach ensures the application can gracefully handle transient network issues and temporary GitHub API outages without failing the user request.
+
+> **Note for Production Deployment:** The current retry configuration uses exponential backoff with delays that could potentially exceed client-side timeouts in worst-case scenarios. In a production environment, these parameters should be tuned based on observed API response times, client timeout settings, and business requirements. Options include adjusting backoff parameters, setting maximum retry times, implementing asynchronous processing for long-running requests, or configuring longer timeouts in both the client and server components.
+
+**Caching Implementation:**
+To minimize unnecessary API calls and improve response times, the application implements a caching strategy:
+- Uses Spring Cache abstraction for clean separation between cache implementation and business logic
+- Current implementation uses a simple in-memory ConcurrentMapCache for the example deployment
+- In a production environment, this could be easily replaced with a distributed cache like Redis or Memcached
+- Cache entries are keyed by the complete SearchRequest object, ensuring proper isolation between different search queries
 
 ## Technologies & How to Run
 

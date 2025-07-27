@@ -9,6 +9,7 @@ import com.grabduck.githubsearch.client.exceptions.GitHubApiRateLimitException;
 import com.grabduck.githubsearch.client.exceptions.GitHubApiServerException;
 
 import java.time.LocalDate;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -73,6 +74,18 @@ public class WebClientGitHubClient implements GitHubClient {
                     response -> response.bodyToMono(String.class).map(GitHubApiServerException::new)
                 )
                 .bodyToMono(GitHubSearchResponseDto.class)
+                .retryWhen(reactor.util.retry.Retry.backoff(3, Duration.ofSeconds(1))
+                    .filter(throwable -> {
+                        // Retry on server errors but not on client errors
+                        return throwable instanceof GitHubApiServerException ||
+                               // Also retry on connection errors
+                               throwable instanceof java.io.IOException;
+                    })
+                    .onRetryExhaustedThrow((retryBackoffSpec, retrySignal) -> {
+                        return new GitHubApiServerException("Failed after " + retrySignal.totalRetries() + 
+                                                         " retries: " + retrySignal.failure().getMessage());
+                    })
+                )
                 .block();
     }
     

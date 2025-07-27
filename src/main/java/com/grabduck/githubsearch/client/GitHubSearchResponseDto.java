@@ -1,9 +1,13 @@
 package com.grabduck.githubsearch.client;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public record GitHubSearchResponseDto(
-    int total_count,
-    boolean incomplete_results,
+    @JsonProperty("total_count") 
+    int totalCount,
+    @JsonProperty("incomplete_results") 
+    boolean incompleteResults,
     List<GitHubRepositoryDto> items
 ) {}

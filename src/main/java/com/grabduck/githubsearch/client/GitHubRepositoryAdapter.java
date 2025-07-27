@@ -39,7 +39,7 @@ public class GitHubRepositoryAdapter implements RepositoryProvider {
                 request.size()
             );
             
-            return new SearchResults(response.total_count(), GitHubSearchResponseDtoMapper.toModel(response.items()));
+            return new SearchResults(response.totalCount(), GitHubSearchResponseDtoMapper.toModel(response.items()));
 
         } catch (GitHubApiException e) {
             // Translate all low level GitHub API exceptions to a generic domain exception with an appropriate message

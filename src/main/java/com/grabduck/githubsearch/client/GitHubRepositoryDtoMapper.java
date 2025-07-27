@@ -15,20 +15,20 @@ public class GitHubRepositoryDtoMapper {
             return null;
         }
         
-        Instant createdAt = dto.created_at() != null ? dto.created_at().toInstant(ZoneOffset.UTC) : null;
-        Instant updatedAt = dto.updated_at() != null ? dto.updated_at().toInstant(ZoneOffset.UTC) : null;
+        Instant createdAt = dto.createdAt() != null ? dto.createdAt().toInstant(ZoneOffset.UTC) : null;
+        Instant updatedAt = dto.updatedAt() != null ? dto.updatedAt().toInstant(ZoneOffset.UTC) : null;
         
         return new Repository(
                 dto.id(),
                 dto.name(),
-                dto.full_name(),
-                dto.html_url(),
+                dto.fullName(),
+                dto.htmlUrl(),
                 dto.description(),
                 createdAt,
                 updatedAt,
                 dto.language(),
-                dto.stargazers_count(),
-                dto.forks_count()
+                dto.stargazersCount(),
+                dto.forksCount()
         );
     }
 }
