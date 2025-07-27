@@ -6,9 +6,22 @@ A backend service for searching GitHub repositories with custom popularity scori
 
 This project demonstrates building a backend app that scores GitHub repositories. The app works as a wrapper around GitHub's public search API, getting repositories and adding a custom popularity score based on stars, forks, and how recently the repo was updated. There is a single service in the domain layer that acts as an orchestration unit. In line with DDD ideas, our domain object is "rich"—it knows by itself how to calculate its own score, so the core logic stays in the domain layer.
 
-The project focuses on demonstrating good architecture principles with practical implementations of production-grade features. The architecture includes caching and retry mechanisms, while maintaining clean separation of concerns:
+The project focuses on demonstrating good architecture principles with practical implementations of production-grade features. The architecture includes caching and retry mechanisms, while maintaining clean separation of concerns.
+
+### Architecture
 
 The main architectural approach is a lightweight hexagonal (ports and adapters) architecture, with the core logic in the `domain` layer and a simple `api` layer on top. This demonstrates how to build systems with clear separation of concerns. I also kept the package structure as flat as possible to maintain simplicity and readability.
+
+<div align="center">
+  <img src="docs/Hexagonal Architecture of GitHub Repo Search API.png" alt="Hexagonal Architecture Diagram" width="700">
+</div>
+
+The diagram above illustrates the hexagonal architecture used in this project:
+
+- **Domain Core**: Contains the business logic, domain models, and scoring algorithm
+- **Ports**: Define interfaces for the domain to interact with external systems
+- **Adapters**: Implement the interfaces to connect with external systems (REST API, GitHub API)
+- **Cross-cutting concerns**: Caching and retry mechanisms enhance performance and resilience
 
 Regarding test coverage: I implemented strategic testing rather than exhaustive coverage. The codebase includes unit tests for the repository score calculation, unit tests to verify proper exception handling, and a full-cycle integration test that validates the main logic flow. For the integration test, I mocked the `RepositoryProvider` with predefined responses instead of using a web server to simulate GitHub (such as OkHttp's `MockWebServer`). This approach focuses on testing the most critical components while maintaining development efficiency.
 
